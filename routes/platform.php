@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Orchid\Screens\AnalyticsAndReportsScreen;
 use App\Orchid\Screens\Client\ClientListScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
@@ -33,10 +34,17 @@ use Tabuna\Breadcrumbs\Trail;
 // Main
 Route::screen('/main', PlatformScreen::class)
     ->name('platform.main');
+
 // Platform > System > Clients
 Route::screen('clients', ClientListScreen::class)
     ->name('platform.clients')->breadcrumbs(
         fn (Trail $trail) => $trail->parent('platform.index')->push('Клиенты')
+    );
+
+// Platform > Analytics and Reports
+Route::screen('analytics-and-reports', AnalyticsAndReportsScreen::class)
+    ->name('platform.analyticsAndReports')->breadcrumbs(
+        fn (Trail $trail) => $trail->parent('platform.index')->push('Аналітика та звіти')
     );
 
 // Platform > Profile
