@@ -25,5 +25,12 @@ class Client extends Model
     protected $allowedFilters = [
         'name'
     ];
+    public const STATUS = [
+        'interviewed' => 'Опрошен',
+        'not_interviewed' => 'Не опрошен'
+    ];
 
+    public function mail(){
+        return $this->belongsTo(Mail::class);
+    }
 }

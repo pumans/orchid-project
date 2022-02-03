@@ -33,7 +33,7 @@ class ClientListTable extends Table
             TD::make('last_name', 'Прізвище')->defaultHidden(),
             TD::make('phone', 'Телефон')->width('150px')->canSee($this->isWorkTime()),
             TD::make('status', 'Статус')->render(function(Client $client){
-                return $client->status === 'interviewed' ? 'контактували' : 'не контактували';
+                return Client::STATUS[$client->status];
             })->width('150px')->popover('Статус комунікації з клієнтом')->sort(),
             TD::make('email', 'Email')->width('150px'),
             TD::make('birthday', 'Дата народження')->defaultHidden()->sort(),

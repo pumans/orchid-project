@@ -5,8 +5,11 @@ namespace App\Orchid\Screens;
 use App\Models\Client;
 use App\Orchid\Layouts\Charts\DynamicsInterviewedClients;
 use App\Orchid\Layouts\Charts\PercentagFeedbackClients;
-use Orchid\Screen\Layout;
+use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Screen;
+use Orchid\Support\Facades\Layout;
+use Orchid\Support\Facades\Toast;
 
 class AnalyticsAndReportsScreen extends Screen
 {
@@ -16,7 +19,7 @@ class AnalyticsAndReportsScreen extends Screen
      * @var string
      */
     public $name = 'Аналітика та звіти';
-
+    public $permission = ['platform.analytics', 'platform.reports'];
     /**
      * Query data.
      *
@@ -42,7 +45,31 @@ class AnalyticsAndReportsScreen extends Screen
     {
         return [];
     }
+    public function exportClients()
+    {
+        $clients = Client::with('mail')->get(['name', 'phone', 'email', 'status', 'assessment', 'mail_id']);
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=clients.csv'
+        ];
+        $columns = ['Імя', 'Телефон', 'email', 'Статус', 'Оценка', 'Сервис'];
+        $callback = function () use ($clients, $columns) {
+            $stream = fopen('php://output', 'w');
+            fputcsv($stream, $columns);
 
+            foreach ($clients as $client) {
+                fputcsv($stream, [
+                    'Імя' => $client->name,
+                    'Телефон' => $client->phone,
+                    'Email'   => $client->email,
+                    'Статус'  => Client::STATUS[$client->status],
+                    'Оценка' => $client->assessment,
+                ]);
+            }
+            fclose($stream);
+        };
+        return response()->stream($callback, 200, $headers);
+    }
     /**
      * Views.
      *
@@ -51,9 +78,18 @@ class AnalyticsAndReportsScreen extends Screen
     public function layout(): array
     {
         return [
-            \Orchid\Support\Facades\Layout::columns([
+            Layout::columns([
                 PercentagFeedbackClients::class,
                 DynamicsInterviewedClients::class,
+            ]),
+            Layout::tabs([
+                'Звіт по клієнтам' => [
+                    Layout::rows([
+                        Button::make('Скачать')
+                            ->method('exportClients')
+                            ->rawClick()
+                    ])
+                ]
             ])
         ];
     }
