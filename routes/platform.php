@@ -11,6 +11,8 @@ use App\Orchid\Screens\Examples\ExampleFieldsScreen;
 use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
 use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
+use App\Orchid\Screens\Mails\EmailListScreen;
+use App\Orchid\Screens\Mails\PhoneListScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
@@ -34,6 +36,14 @@ use Tabuna\Breadcrumbs\Trail;
 // Main
 Route::screen('/main', PlatformScreen::class)
     ->name('platform.main');
+
+// Emails
+Route::screen('emails', EmailListScreen::class)
+    ->name('platform.emails');
+
+// phones
+Route::screen('phones', PhoneListScreen::class)
+    ->name('platform.phones');
 
 // Platform > System > Clients
 Route::screen('clients', ClientListScreen::class)
