@@ -39,11 +39,15 @@ Route::screen('/main', PlatformScreen::class)
 
 // Emails
 Route::screen('emails', EmailListScreen::class)
-    ->name('platform.emails');
+    ->name('platform.emails')->breadcrumbs(
+        fn (Trail $trail) => $trail->parent('platform.index')->push('звернення з email')
+    );
 
 // phones
 Route::screen('phones', PhoneListScreen::class)
-    ->name('platform.phones');
+    ->name('platform.phones')->breadcrumbs(
+        fn (Trail $trail) => $trail->parent('platform.index')->push('звернення з телефоном')
+    );
 
 // Platform > System > Clients
 Route::screen('clients', ClientListScreen::class)
