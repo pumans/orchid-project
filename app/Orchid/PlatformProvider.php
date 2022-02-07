@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Orchid;
 
+use Illuminate\Support\Facades\Auth;
 use Orchid\Platform\Dashboard;
 use Orchid\Platform\ItemPermission;
 use Orchid\Platform\OrchidServiceProvider;
@@ -28,11 +29,27 @@ class PlatformProvider extends OrchidServiceProvider
     public function registerMainMenu(): array
     {
         return [
+            Menu::make('Звернення')
+                ->icon('note')
+                ->list([
+                    Menu::make('по email')
+                    ->icon('envelope')
+                    ->route('platform.emails'),
+                    Menu::make('за телефоном')
+                    ->icon('phone')
+                    ->route('platform.phones'),
+                ]),
+
             Menu::make('Клієнти')
             ->icon('user')
-                ->route('platform.clients')
-                ->title('Клієнти'),
+            ->route('platform.clients')
+            ->permission('platform.clients'),
 
+            Menu::make('Аналітика та звіти')
+                ->icon('chart')
+                ->route('platform.analyticsAndReports')
+                ->title('Аналітика та звіти')
+                ->canSee(Auth::user()->hasAccess('platform.analytics') && Auth::user()->hasAccess('platform.reports')),
            /*
             Menu::make('Example screen')
                 ->icon('monitor')
@@ -123,6 +140,11 @@ class PlatformProvider extends OrchidServiceProvider
             ItemPermission::group(__('System'))
                 ->addPermission('platform.systems.roles', __('Roles'))
                 ->addPermission('platform.systems.users', __('Users')),
+
+            ItemPermission::group(__('Оценка клиентов'))
+                ->addPermission('platform.clients', 'Клиенты')
+                ->addPermission('platform.analytics', 'Аналитика')
+                ->addPermission('platform.reports', 'Отчеты'),
         ];
     }
 }

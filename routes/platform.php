@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Orchid\Screens\AnalyticsAndReportsScreen;
 use App\Orchid\Screens\Client\ClientListScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
@@ -10,6 +11,8 @@ use App\Orchid\Screens\Examples\ExampleFieldsScreen;
 use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
 use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
+use App\Orchid\Screens\Mails\EmailListScreen;
+use App\Orchid\Screens\Mails\PhoneListScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
@@ -33,10 +36,29 @@ use Tabuna\Breadcrumbs\Trail;
 // Main
 Route::screen('/main', PlatformScreen::class)
     ->name('platform.main');
+
+// Emails
+Route::screen('emails', EmailListScreen::class)
+    ->name('platform.emails')->breadcrumbs(
+        fn (Trail $trail) => $trail->parent('platform.index')->push('звернення з email')
+    );
+
+// phones
+Route::screen('phones', PhoneListScreen::class)
+    ->name('platform.phones')->breadcrumbs(
+        fn (Trail $trail) => $trail->parent('platform.index')->push('звернення з телефоном')
+    );
+
 // Platform > System > Clients
 Route::screen('clients', ClientListScreen::class)
     ->name('platform.clients')->breadcrumbs(
         fn (Trail $trail) => $trail->parent('platform.index')->push('Клиенты')
+    );
+
+// Platform > Analytics and Reports
+Route::screen('analytics-and-reports', AnalyticsAndReportsScreen::class)
+    ->name('platform.analyticsAndReports')->breadcrumbs(
+        fn (Trail $trail) => $trail->parent('platform.index')->push('Аналітика та звіти')
     );
 
 // Platform > Profile
